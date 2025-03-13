@@ -1,4 +1,8 @@
+#include "kernel/types.h"
+#include "kernel/sysinfo.h"
+
 struct stat;
+struct sysinfo;
 
 // system calls
 int fork(void);
@@ -22,6 +26,9 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int hello(int);
+int trace(int);
+int sysinfo(struct sysinfo *);
 
 // ulib.c
 int stat(const char*, struct stat*);

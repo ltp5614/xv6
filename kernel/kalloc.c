@@ -12,7 +12,8 @@
 void freerange(void *pa_start, void *pa_end);
 
 extern char end[]; // first address after kernel.
-                   // defined by kernel.ld.
+                   // defined by kernel.l
+extern struct run *freelist;
 
 struct run {
   struct run *next;
@@ -80,3 +81,21 @@ kalloc(void)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
 }
+
+int
+count_freemem(void)
+{
+  int n = 0;
+  struct run *r;
+
+  acquire(&kmem.lock);
+
+  // Count the number of completely empty pages  
+  for (r = kmem.freelist; r; r = r->next) {
+    n++;
+  }
+
+  release(&kmem.lock);
+
+  return n * PGSIZE;
+}  

@@ -180,3 +180,22 @@ filewrite(struct file *f, uint64 addr, int n)
   return ret;
 }
 
+int
+count_open_file(void) 
+{
+  int n = 0;
+  
+  struct file *f;
+
+  acquire(&ftable.lock);
+
+  for (f = ftable.file; f < &ftable.file[NFILE]; f++) {
+    if (f->ref > 0) {
+      n++;
+    }
+  }
+
+  release(&ftable.lock);
+
+  return n;
+}
